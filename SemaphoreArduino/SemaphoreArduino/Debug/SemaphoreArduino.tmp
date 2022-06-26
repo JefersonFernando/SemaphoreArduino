@@ -1,0 +1,38 @@
+<ASSEMBLER_INFO>
+ <VERSION>2.2.8</VERSION>
+ <DEVICE>"ATmega328P"</DEVICE>
+ <WORKING_DIR>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\Debug</WORKING_DIR>
+ <INCLUDE_PATH>
+  <DIR>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.6.364\avrasm\inc</DIR>
+  <DIR>C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avrassembler\Include</DIR>
+  <DIR></DIR>
+ </INCLUDE_PATH>
+ <SOURCE_FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</SOURCE_FILE>
+ <INCLUDED_FILES>
+  <FILE>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.6.364\avrasm\inc\m328Pdef.inc</FILE>
+ </INCLUDED_FILES>
+ <OBJECT_FILES>
+  <FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\Debug\SemaphoreArduino.obj</FILE>
+ </OBJECT_FILES>
+ <HEX_FILES>
+  <FILE>SemaphoreArduino.hex</FILE>
+ </HEX_FILES>
+ <OUTPUT_FILES>
+  <FILE>SemaphoreArduino.map</FILE>
+  <FILE>SemaphoreArduino.lss</FILE>
+ </OUTPUT_FILES>
+ <LABELS>
+  <reset><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>90</LINE></reset>
+  <OCI2A_Interrupt><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>35</LINE></OCI2A_Interrupt>
+  <OCI1A_Interrupt><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>45</LINE></OCI1A_Interrupt>
+  <return_int1><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>66</LINE></return_int1>
+  <update_state_time><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>63</LINE></update_state_time>
+  <STATE_TIME><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>72</LINE></STATE_TIME>
+  <SEMAPHORE_ONE_STATE><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>75</LINE></SEMAPHORE_ONE_STATE>
+  <SEMAPHORE_TWO_STATE><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>78</LINE></SEMAPHORE_TWO_STATE>
+  <SEMAPHORE_THREE_STATE><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>81</LINE></SEMAPHORE_THREE_STATE>
+  <SEMAPHORE_FOUR_STATE><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>84</LINE></SEMAPHORE_FOUR_STATE>
+  <SEMAPHORE_PEDESTRIAN_STATE><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>87</LINE></SEMAPHORE_PEDESTRIAN_STATE>
+  <main_lp><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>153</LINE></main_lp>
+ </LABELS>
+</ASSEMBLER_INFO>
