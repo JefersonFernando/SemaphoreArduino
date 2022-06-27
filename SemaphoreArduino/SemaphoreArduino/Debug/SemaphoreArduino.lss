@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm Sun Jun 26 19:57:12 2022
+AVRASM ver. 2.2.8  C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm Mon Jun 27 00:48:19 2022
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.6.364\avrasm\inc\m328Pdef.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.6.364\avrasm\inc\m328Pdef.inc'
@@ -1000,114 +1000,235 @@ AVRASM ver. 2.2.8  C:\Users\jefer\projects\IC\aulas\microcontroladores\Semaphore
                                  #define GREEN_LED_BIT 0
                                  
                                  #define MAX_STATE 7
+                                 #define MAX_SEMAPHORE 5
                                  
                                  #define CLOCK 16.0e6 ;clock speed
                                  #define TIMER_1_DELAY 1.0e-3 ;seconds
                                  #define TIMER_2_DELAY  4.0e-3
+                                 
+                                 //Define pino e porta que ativa o semáforo 1.
+                                 #define SEMAPHORE_ONE_PORT PORTC
+                                 #define SEMAPHORE_ONE_PIN 5
+                                 
+                                 //Define pino e porta que ativa o semáforo 2.
+                                 #define SEMAPHORE_TWO_PORT PORTC
+                                 #define SEMAPHORE_TWO_PIN 4
+                                 
+                                 //Define pino e porta que ativa o semáforo 3.
+                                 #define SEMAPHORE_THREE_PORT PORTC
+                                 #define SEMAPHORE_THREE_PIN 3
+                                 
+                                 //Define pino e porta que ativa o semáforo 4.
+                                 #define SEMAPHORE_FOUR_PORT PORTC
+                                 #define SEMAPHORE_FOUR_PIN 2
+                                 
+                                 //Define pino e porta que ativa o semáforo de pedestres.
+                                 #define SEMAPHORE_PEDESTRIAN_PORT PORTC
+                                 #define SEMAPHORE_PEDESTRIAN_PIN 1
                                  
                                  .def temp = r16
                                  .def tpointer = r17 ;current LED value
                                  .def current_state = r18
                                  .def remaining_state_time = r19
                                  .def current_showing = r20
+                                 .def current_leds = r21
                                  
-000000 940c 0048                 jmp reset
+000000 940c 007b                 jmp reset
                                  
                                  .org OC2Aaddr
 00000e 940c 0018                 jmp OCI2A_Interrupt
                                  .org OC1Aaddr
-000016 940c 001f                 jmp OCI1A_Interrupt
+000016 940c 004f                 jmp OCI1A_Interrupt
                                  
                                  OCI2A_Interrupt:
 000018 930f                      	push r16
 000019 b70f                      	in r16, SREG
 00001a 930f                      	push r16
                                  	
-00001b 910f                      	pop r16
-00001c bf0f                      	out SREG, r16
-00001d 910f                      	pop r16
-00001e 9518                      	reti
+                                 	// Verifica se o semáforo a ser exibido é o primeiro.
+00001b 3040                      	cpi current_showing, 0
+00001c f449                      	brne verify_second_semaphore
+                                 
+00001d e000                      	ldi temp, 0
+00001e e0f0                      	ldi ZH, high(SEMAPHORE_ONE_STATE*2)
+00001f ecee                      	ldi	ZL, low(SEMAPHORE_ONE_STATE*2)
+000020 0fe2                      	add ZL, current_state
+000021 1ff0                      	adc ZH, temp
+                                 
+000022 9154                      	lpm current_leds, Z
+                                 
+000023 b908                      	out PORTC, temp
+000024 b90b                      	out PORTD, temp
+                                 	
+000025 c021                      	rjmp skip_semaphore_verify
+                                 	// Verifica se o semáforo a ser exibido é o segundo.
+                                 	verify_second_semaphore:
+000026 3041                      	cpi current_showing, 1
+000027 f439                      	brne verify_third_semaphore
+                                 
+000028 e000                      	ldi temp, 0
+000029 e0f0                      	ldi ZH, high(SEMAPHORE_TWO_STATE*2)
+00002a ede6                      	ldi	ZL, low(SEMAPHORE_TWO_STATE*2)
+00002b 0fe2                      	add ZL, current_state
+00002c 1ff0                      	adc ZH, temp
+                                 
+00002d 9154                      	lpm current_leds, Z
+                                 
+00002e c018                      	rjmp skip_semaphore_verify
+                                 	// Verifica se o semáforo a ser exibido é o terceiro.
+                                 	verify_third_semaphore:
+00002f 3042                      	cpi current_showing, 2
+000030 f439                      	brne verify_fourth_semaphore
+                                 
+000031 e000                      	ldi temp, 0
+000032 e0f0                      	ldi ZH, high(SEMAPHORE_THREE_STATE*2)
+000033 edee                      	ldi	ZL, low(SEMAPHORE_THREE_STATE*2)
+000034 0fe2                      	add ZL, current_state
+000035 1ff0                      	adc ZH, temp
+                                 
+000036 9154                      	lpm current_leds, Z
+                                 
+000037 c00f                      	rjmp skip_semaphore_verify
+                                 	// Verifica se o semáforo a ser exibido é o quarto.
+                                 	verify_fourth_semaphore:
+000038 3043                      	cpi current_showing, 3
+000039 f439                      	brne verify_pedestrian_semaphore
+                                 
+00003a e000                      	ldi temp, 0
+00003b e0f0                      	ldi ZH, high(SEMAPHORE_THREE_STATE*2)
+00003c edee                      	ldi	ZL, low(SEMAPHORE_THREE_STATE*2)
+00003d 0fe2                      	add ZL, current_state
+00003e 1ff0                      	adc ZH, temp
+                                 
+00003f 9154                      	lpm current_leds, Z
+                                 
+000040 c006                      	rjmp skip_semaphore_verify
+                                 	// Verifica se o semáforo a ser exibido é o de pedestres.
+                                 	verify_pedestrian_semaphore:
+000041 e000                      	ldi temp, 0
+000042 e0f0                      	ldi ZH, high(SEMAPHORE_PEDESTRIAN_STATE*2)
+000043 eeee                      	ldi	ZL, low(SEMAPHORE_PEDESTRIAN_STATE*2)
+000044 0fe2                      	add ZL, current_state
+000045 1ff0                      	adc ZH, temp
+                                 
+000046 9154                      	lpm current_leds, Z
+                                 
+                                 	skip_semaphore_verify:
+                                 
+                                 
+000047 9543                      	inc current_showing
+000048 3045                      	cpi current_showing, MAX_SEMAPHORE
+000049 f409                      	brne skip_current_showing_zero
+                                 
+00004a e040                      	ldi current_showing, 0
+                                 
+                                 	skip_current_showing_zero:
+                                 
+                                 
+                                 
+00004b 910f                      	pop r16
+00004c bf0f                      	out SREG, r16
+00004d 910f                      	pop r16
+00004e 9518                      	reti
                                  
                                  OCI1A_Interrupt:
-00001f 930f                      	push r16
-000020 b70f                      	in r16, SREG
-000021 930f                      	push r16
+00004f 930f                      	push r16
+000050 b70f                      	in r16, SREG
+000051 930f                      	push r16
                                  
-000022 953a                      	dec remaining_state_time
+000052 953a                      	dec remaining_state_time
                                  
-000023 2333                      	tst remaining_state_time
-000024 f439                      	brne return_int1 
+000053 2333                      	tst remaining_state_time
+000054 f451                      	brne return_int1 
                                  	
-000025 9523                      	inc current_state
-000026 3027                      	cpi current_state, MAX_STATE
-000027 f419                      	brne update_state_time
+000055 9523                      	inc current_state
+000056 3027                      	cpi current_state, MAX_STATE
+000057 f409                      	brne update_state_time
                                  
-000028 e020                      	ldi current_state, 0
-000029 e0f0                      	ldi ZH, high(STATE_TIME*2)
-00002a e6e0                      	ldi	ZL, low(STATE_TIME*2)
+000058 e020                      	ldi current_state, 0
                                  
                                  	update_state_time:
-00002b 9135                      	lpm remaining_state_time, Z+
+000059 e000                      	ldi temp, 0
+00005a e0f0                      	ldi ZH, high(STATE_TIME*2)
+00005b ece6                      	ldi	ZL, low(STATE_TIME*2)
+00005c 0fe2                      	add ZL, current_state
+00005d 1ff0                      	adc ZH, temp
+                                 
+00005e 9134                      	lpm remaining_state_time, Z
                                  
                                  	return_int1:
-00002c 910f                      		pop r16
-00002d bf0f                      		out SREG, r16
-00002e 910f                      		pop r16
-00002f 9518                      		reti
+00005f 910f                      		pop r16
+000060 bf0f                      		out SREG, r16
+000061 910f                      		pop r16
+000062 9518                      		reti
                                  
                                  STATE_TIME:
-000030 041a
-000031 0438
-000032 040b
-C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm(73): warning: .cseg .db misalignment - padding zero byte
-000033 0014                      .db 26, 4, 56, 4, 11, 4, 20
+000063 041a
+000064 0438
+000065 040b
+C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm(180): warning: .cseg .db misalignment - padding zero byte
+000066 0014                      .db 26, 4, 56, 4, 11, 4, 20
                                  
                                  SEMAPHORE_ONE_STATE:
-000034 0101
-000035 0201
-000036 0404
-C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm(76): warning: .cseg .db misalignment - padding zero byte
-000037 0004                      .db 0b001, 0b001, 0b001, 0b010, 0b100, 0b100, 0b100
+000067 0101
+000068 0201
+000069 0404
+C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm(183): warning: .cseg .db misalignment - padding zero byte
+00006a 0004                      .db 0b001, 0b001, 0b001, 0b010, 0b100, 0b100, 0b100
                                  
                                  SEMAPHORE_TWO_STATE:
-000038 0201
-000039 0404
-00003a 0404
-C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm(79): warning: .cseg .db misalignment - padding zero byte
-00003b 0004                      .db 0b001, 0b010, 0b100, 0b100, 0b100, 0b100, 0b100
+00006b 0201
+00006c 0404
+00006d 0404
+C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm(186): warning: .cseg .db misalignment - padding zero byte
+00006e 0004                      .db 0b001, 0b010, 0b100, 0b100, 0b100, 0b100, 0b100
                                  
                                  SEMAPHORE_THREE_STATE:
-00003c 0404
-00003d 0201
-00003e 0404
-C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm(82): warning: .cseg .db misalignment - padding zero byte
-00003f 0004                      .db 0b100, 0b100, 0b001, 0b010, 0b100, 0b100, 0b100
+00006f 0404
+000070 0201
+000071 0404
+C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm(189): warning: .cseg .db misalignment - padding zero byte
+000072 0004                      .db 0b100, 0b100, 0b001, 0b010, 0b100, 0b100, 0b100
                                  
                                  SEMAPHORE_FOUR_STATE:
-000040 0404
-000041 0404
-000042 0201
-C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm(85): warning: .cseg .db misalignment - padding zero byte
-000043 0004                      .db 0b100, 0b100, 0b100, 0b100, 0b001, 0b010, 0b100
+000073 0404
+000074 0404
+000075 0201
+C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm(192): warning: .cseg .db misalignment - padding zero byte
+000076 0004                      .db 0b100, 0b100, 0b100, 0b100, 0b001, 0b010, 0b100
                                  
                                  SEMAPHORE_PEDESTRIAN_STATE:
-000044 0404
-000045 0404
-000046 0404
-C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm(88): warning: .cseg .db misalignment - padding zero byte
-000047 0001                      .db 0b100, 0b100, 0b100, 0b100, 0b100, 0b100, 0b001
+000077 0404
+000078 0404
+000079 0404
+C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm(195): warning: .cseg .db misalignment - padding zero byte
+00007a 0001                      .db 0b100, 0b100, 0b100, 0b100, 0b100, 0b100, 0b001
                                  
                                  reset:
                                  	;Stack initialization
-000048 ef0f                      	ldi temp, low(RAMEND)
-000049 bf0d                      	out SPL, temp
-00004a e008                      	ldi temp, high(RAMEND)
-00004b bf0e                      	out SPH, temp
+00007b ef0f                      	ldi temp, low(RAMEND)
+00007c bf0d                      	out SPL, temp
+00007d e008                      	ldi temp, high(RAMEND)
+00007e bf0e                      	out SPH, temp
                                  
-00004c e020                      	ldi current_state, 0
-00004d e0f0                      	ldi ZH, high(STATE_TIME*2)
-00004e e6e0                      	ldi	ZL, low(STATE_TIME*2)
-00004f 9135                      	lpm remaining_state_time, Z+
+                                 	//Configura pinos 0 a 5 do barramento C como saída
+00007f e10f                      	ldi temp, 0b11111
+000080 b907                      	out DDRC, temp
+                                 
+                                 	//Configura todos os pinos do barramento D como saída
+000081 ef0f                      	ldi temp, 0xFF
+000082 b90a                      	out DDRD, temp
+                                 
+000083 e000                      	ldi temp, 0
+000084 e020                      	ldi current_state, 0
+000085 e0f0                      	ldi ZH, high(STATE_TIME*2)
+000086 ece6                      	ldi	ZL, low(STATE_TIME*2)
+000087 0fe2                      	add ZL, current_state
+000088 1ff0                      	adc ZH, temp
+                                 
+000089 9134                      	lpm remaining_state_time, Z
+                                 
+00008a e040                      	ldi current_showing, 0
                                  
                                  
                                  	.equ WGM = 0b0100 ;Waveform generation mode: CTC
@@ -1124,40 +1245,40 @@ C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreAr
                                  	.endif
                                  
                                  	///// TOP UM /////
-000050 e000                      	ldi temp, high(TOP) ;initialize compare value (TOP)
-000051 9300 0089                 	sts OCR1AH, temp
-000053 e30f                      	ldi temp, low(TOP)
-000054 9300 0088                 	sts OCR1AL, temp
+00008b e000                      	ldi temp, high(TOP) ;initialize compare value (TOP)
+00008c 9300 0089                 	sts OCR1AH, temp
+00008e e30f                      	ldi temp, low(TOP)
+00008f 9300 0088                 	sts OCR1AL, temp
                                  
-000056 e000                      	ldi temp, ((WGM&0b11) << WGM10) ;lower 2 bits of WGM
+000091 e000                      	ldi temp, ((WGM&0b11) << WGM10) ;lower 2 bits of WGM
                                  	; WGM&0b11 = 0b0100 & 0b0011 = 0b0000 
-000057 9300 0080                 	sts TCCR1A, temp
+000092 9300 0080                 	sts TCCR1A, temp
                                  	;upper 2 bits of WGM and clock select
-000059 e00c                      	ldi temp, ((WGM>> 2) << WGM12)|(PRESCALE << CS10)
-00005a 9300 0081                 	sts TCCR1B, temp
+000094 e00c                      	ldi temp, ((WGM>> 2) << WGM12)|(PRESCALE << CS10)
+000095 9300 0081                 	sts TCCR1B, temp
                                  
-00005c 9100 006f                 	lds r16, TIMSK1
-00005e 6002                      	sbr r16, 1 <<OCIE1A
-00005f 9300 006f                 	sts TIMSK1, r16
+000097 9100 006f                 	lds r16, TIMSK1
+000099 6002                      	sbr r16, 1 <<OCIE1A
+00009a 9300 006f                 	sts TIMSK1, r16
                                  
                                  	///// TOP DOIS /////
-000061 ef0a                      	ldi temp, TOP_TWO ;initialize compare value (TOP)
-000062 9300 00b3                 	sts OCR2A, temp
+00009c ef0a                      	ldi temp, TOP_TWO ;initialize compare value (TOP)
+00009d 9300 00b3                 	sts OCR2A, temp
                                  
                                  	;ldi temp, ((WGM&0b11) << WGM10) ;lower 2 bits of WGM
-000064 e002                      	ldi temp, 0b00000010
+00009f e002                      	ldi temp, 0b00000010
                                  	; WGM&0b11 = 0b0100 & 0b0011 = 0b0000 
-000065 9300 00b0                 	sts TCCR2A, temp
+0000a0 9300 00b0                 	sts TCCR2A, temp
                                  
-000067 e006                      	ldi temp, 0b00000110
+0000a2 e006                      	ldi temp, 0b00000110
                                  	; WGM&0b11 = 0b0100 & 0b0011 = 0b0000 
-000068 9300 00b1                 	sts TCCR2B, temp
+0000a3 9300 00b1                 	sts TCCR2B, temp
                                  
-00006a 9100 0070                 	lds r16, TIMSK2
-00006c 6002                      	sbr r16, 1 <<OCIE2A
-00006d 9300 0070                 	sts TIMSK2, r16
+0000a5 9100 0070                 	lds r16, TIMSK2
+0000a7 6002                      	sbr r16, 1 <<OCIE2A
+0000a8 9300 0070                 	sts TIMSK2, r16
                                  
-00006f 9478                      	sei
+0000aa 9478                      	sei
                                  	main_lp:
 
 
@@ -1176,39 +1297,39 @@ counted separately from r26..r31 here.
 .dseg memory usage only counts static data declared with .byte
 
 "ATmega328P" register use summary:
-x  :   0 y  :   0 z  :   2 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
+x  :   0 y  :   0 z  :   7 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
-r13:   0 r14:   0 r15:   0 r16:  36 r17:   0 r18:   4 r19:   4 r20:   0 
-r21:   0 r22:   0 r23:   0 r24:   0 r25:   0 r26:   0 r27:   0 r28:   0 
-r29:   0 r30:   2 r31:   2 
-Registers used: 6 out of 35 (17.1%)
+r13:   0 r14:   0 r15:   0 r16:  56 r17:   0 r18:  11 r19:   4 r20:   8 
+r21:   5 r22:   0 r23:   0 r24:   0 r25:   0 r26:   0 r27:   0 r28:   0 
+r29:   0 r30:  14 r31:  14 
+Registers used: 8 out of 35 (22.9%)
 
 "ATmega328P" instruction use summary:
-.lds  :   0 .sts  :   0 adc   :   0 add   :   0 adiw  :   0 and   :   0 
+.lds  :   0 .sts  :   0 adc   :   7 add   :   7 adiw  :   0 and   :   0 
 andi  :   0 asr   :   0 bclr  :   0 bld   :   0 brbc  :   0 brbs  :   0 
 brcc  :   0 brcs  :   0 break :   0 breq  :   0 brge  :   0 brhc  :   0 
 brhs  :   0 brid  :   0 brie  :   0 brlo  :   0 brlt  :   0 brmi  :   0 
-brne  :   2 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
+brne  :   7 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
 brvs  :   0 bset  :   0 bst   :   0 call  :   0 cbi   :   0 cbr   :   0 
 clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   0 cls   :   0 
 clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   0 cpc   :   0 
-cpi   :   1 cpse  :   0 dec   :   1 eor   :   0 fmul  :   0 fmuls :   0 
-fmulsu:   0 icall :   0 ijmp  :   0 in    :   2 inc   :   1 jmp   :   3 
-ld    :   0 ldd   :   0 ldi   :  15 lds   :   2 lpm   :   2 lsl   :   0 
+cpi   :   6 cpse  :   0 dec   :   1 eor   :   0 fmul  :   0 fmuls :   0 
+fmulsu:   0 icall :   0 ijmp  :   0 in    :   2 inc   :   2 jmp   :   3 
+ld    :   0 ldd   :   0 ldi   :  36 lds   :   2 lpm   :  14 lsl   :   0 
 lsr   :   0 mov   :   0 movw  :   0 mul   :   0 muls  :   0 mulsu :   0 
-neg   :   0 nop   :   0 or    :   0 ori   :   0 out   :   4 pop   :   4 
-push  :   4 rcall :   0 ret   :   0 reti  :   2 rjmp  :   1 rol   :   0 
+neg   :   0 nop   :   0 or    :   0 ori   :   0 out   :   8 pop   :   4 
+push  :   4 rcall :   0 ret   :   0 reti  :   2 rjmp  :   5 rol   :   0 
 ror   :   0 sbc   :   0 sbci  :   0 sbi   :   0 sbic  :   0 sbis  :   0 
 sbiw  :   0 sbr   :   2 sbrc  :   0 sbrs  :   0 sec   :   0 seh   :   0 
 sei   :   1 sen   :   0 ser   :   0 ses   :   0 set   :   0 sev   :   0 
 sez   :   0 sleep :   0 spm   :   0 st    :   0 std   :   0 sts   :   9 
 sub   :   0 subi  :   0 swap  :   0 tst   :   1 wdr   :   0 
-Instructions used: 18 out of 113 (15.9%)
+Instructions used: 20 out of 113 (17.7%)
 
 "ATmega328P" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x0000e2    142     48    190   32768   0.6%
+[.cseg] 0x000000 0x000158    260     48    308   32768   0.9%
 [.dseg] 0x000100 0x000100      0      0      0    2048   0.0%
 [.eseg] 0x000000 0x000000      0      0      0    1024   0.0%
 

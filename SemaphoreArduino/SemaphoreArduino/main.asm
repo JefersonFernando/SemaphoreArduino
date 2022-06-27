@@ -14,16 +14,38 @@
 #define GREEN_LED_BIT 0
 
 #define MAX_STATE 7
+#define MAX_SEMAPHORE 5
 
 #define CLOCK 16.0e6 ;clock speed
 #define TIMER_1_DELAY 1.0e-3 ;seconds
 #define TIMER_2_DELAY  4.0e-3
+
+//Define pino e porta que ativa o semáforo 1.
+#define SEMAPHORE_ONE_PORT PORTC
+#define SEMAPHORE_ONE_PIN 5
+
+//Define pino e porta que ativa o semáforo 2.
+#define SEMAPHORE_TWO_PORT PORTC
+#define SEMAPHORE_TWO_PIN 4
+
+//Define pino e porta que ativa o semáforo 3.
+#define SEMAPHORE_THREE_PORT PORTC
+#define SEMAPHORE_THREE_PIN 3
+
+//Define pino e porta que ativa o semáforo 4.
+#define SEMAPHORE_FOUR_PORT PORTC
+#define SEMAPHORE_FOUR_PIN 2
+
+//Define pino e porta que ativa o semáforo de pedestres.
+#define SEMAPHORE_PEDESTRIAN_PORT PORTC
+#define SEMAPHORE_PEDESTRIAN_PIN 1
 
 .def temp = r16
 .def tpointer = r17 ;current LED value
 .def current_state = r18
 .def remaining_state_time = r19
 .def current_showing = r20
+.def current_leds = r21
 
 jmp reset
 
@@ -37,6 +59,87 @@ OCI2A_Interrupt:
 	in r16, SREG
 	push r16
 	
+	// Verifica se o semáforo a ser exibido é o primeiro.
+	cpi current_showing, 0
+	brne verify_second_semaphore
+
+	ldi temp, 0
+	ldi ZH, high(SEMAPHORE_ONE_STATE*2)
+	ldi	ZL, low(SEMAPHORE_ONE_STATE*2)
+	add ZL, current_state
+	adc ZH, temp
+
+	lpm current_leds, Z
+
+	out PORTC, temp
+	out PORTD, temp
+	
+	rjmp skip_semaphore_verify
+	// Verifica se o semáforo a ser exibido é o segundo.
+	verify_second_semaphore:
+	cpi current_showing, 1
+	brne verify_third_semaphore
+
+	ldi temp, 0
+	ldi ZH, high(SEMAPHORE_TWO_STATE*2)
+	ldi	ZL, low(SEMAPHORE_TWO_STATE*2)
+	add ZL, current_state
+	adc ZH, temp
+
+	lpm current_leds, Z
+
+	rjmp skip_semaphore_verify
+	// Verifica se o semáforo a ser exibido é o terceiro.
+	verify_third_semaphore:
+	cpi current_showing, 2
+	brne verify_fourth_semaphore
+
+	ldi temp, 0
+	ldi ZH, high(SEMAPHORE_THREE_STATE*2)
+	ldi	ZL, low(SEMAPHORE_THREE_STATE*2)
+	add ZL, current_state
+	adc ZH, temp
+
+	lpm current_leds, Z
+
+	rjmp skip_semaphore_verify
+	// Verifica se o semáforo a ser exibido é o quarto.
+	verify_fourth_semaphore:
+	cpi current_showing, 3
+	brne verify_pedestrian_semaphore
+
+	ldi temp, 0
+	ldi ZH, high(SEMAPHORE_THREE_STATE*2)
+	ldi	ZL, low(SEMAPHORE_THREE_STATE*2)
+	add ZL, current_state
+	adc ZH, temp
+
+	lpm current_leds, Z
+
+	rjmp skip_semaphore_verify
+	// Verifica se o semáforo a ser exibido é o de pedestres.
+	verify_pedestrian_semaphore:
+	ldi temp, 0
+	ldi ZH, high(SEMAPHORE_PEDESTRIAN_STATE*2)
+	ldi	ZL, low(SEMAPHORE_PEDESTRIAN_STATE*2)
+	add ZL, current_state
+	adc ZH, temp
+
+	lpm current_leds, Z
+
+	skip_semaphore_verify:
+
+
+	inc current_showing
+	cpi current_showing, MAX_SEMAPHORE
+	brne skip_current_showing_zero
+
+	ldi current_showing, 0
+
+	skip_current_showing_zero:
+
+
+
 	pop r16
 	out SREG, r16
 	pop r16
@@ -57,11 +160,15 @@ OCI1A_Interrupt:
 	brne update_state_time
 
 	ldi current_state, 0
-	ldi ZH, high(STATE_TIME*2)
-	ldi	ZL, low(STATE_TIME*2)
 
 	update_state_time:
-	lpm remaining_state_time, Z+
+	ldi temp, 0
+	ldi ZH, high(STATE_TIME*2)
+	ldi	ZL, low(STATE_TIME*2)
+	add ZL, current_state
+	adc ZH, temp
+
+	lpm remaining_state_time, Z
 
 	return_int1:
 		pop r16
@@ -94,10 +201,24 @@ reset:
 	ldi temp, high(RAMEND)
 	out SPH, temp
 
+	//Configura pinos 0 a 5 do barramento C como saída
+	ldi temp, 0b11111
+	out DDRC, temp
+
+	//Configura todos os pinos do barramento D como saída
+	ldi temp, 0xFF
+	out DDRD, temp
+
+	ldi temp, 0
 	ldi current_state, 0
 	ldi ZH, high(STATE_TIME*2)
 	ldi	ZL, low(STATE_TIME*2)
-	lpm remaining_state_time, Z+
+	add ZL, current_state
+	adc ZH, temp
+
+	lpm remaining_state_time, Z
+
+	ldi current_showing, 0
 
 
 	.equ WGM = 0b0100 ;Waveform generation mode: CTC

@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm Sun Jun 26 19:57:12 2022
+AVRASM ver. 2.2.8  C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm Mon Jun 27 00:48:19 2022
 
 
 EQU  SIGNATURE_000 0000001e
@@ -700,20 +700,27 @@ DEF  tpointer     r17
 DEF  current_state r18
 DEF  remaining_state_time r19
 DEF  current_showing r20
-CSEG reset        00000048
+DEF  current_leds r21
+CSEG reset        0000007b
 CSEG OCI2A_Interrupt 00000018
-CSEG OCI1A_Interrupt 0000001f
-CSEG return_int1  0000002c
-CSEG update_state_time 0000002b
-CSEG STATE_TIME   00000030
-CSEG SEMAPHORE_ONE_STATE 00000034
-CSEG SEMAPHORE_TWO_STATE 00000038
-CSEG SEMAPHORE_THREE_STATE 0000003c
-CSEG SEMAPHORE_FOUR_STATE 00000040
-CSEG SEMAPHORE_PEDESTRIAN_STATE 00000044
+CSEG OCI1A_Interrupt 0000004f
+CSEG verify_second_semaphore 00000026
+CSEG SEMAPHORE_ONE_STATE 00000067
+CSEG skip_semaphore_verify 00000047
+CSEG verify_third_semaphore 0000002f
+CSEG SEMAPHORE_TWO_STATE 0000006b
+CSEG verify_fourth_semaphore 00000038
+CSEG SEMAPHORE_THREE_STATE 0000006f
+CSEG verify_pedestrian_semaphore 00000041
+CSEG SEMAPHORE_PEDESTRIAN_STATE 00000077
+CSEG skip_current_showing_zero 0000004b
+CSEG return_int1  0000005f
+CSEG update_state_time 00000059
+CSEG STATE_TIME   00000063
+CSEG SEMAPHORE_FOUR_STATE 00000073
 EQU  WGM          00000004
 EQU  PRESCALE     00000004
 EQU  PRESCALE_DIV 00000100
 EQU  TOP          0000003f
 EQU  TOP_TWO      000000fa
-CSEG main_lp      00000070
+CSEG main_lp      000000ab
