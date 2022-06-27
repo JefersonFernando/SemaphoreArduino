@@ -13,6 +13,24 @@
 #define YELLOW_LED_BIT 1
 #define GREEN_LED_BIT 0
 
+#define RED_LED_PORT PORTD
+#define RED_LED_PIN 0
+
+#define YELLOW_LED_PORT PORTD
+#define YELLOW_LED_PIN 1
+
+#define GREEN_LED_PORT PORTD
+#define GREEN_LED_PIN 2
+
+#define DISPLAY_ONE_PORT PORTD
+#define DISPLAY_ONE_PIN 3
+
+#define DISPLAY_TWO_PORT PORTC
+#define DISPLAY_TWO_PIN 4
+
+#define DISPLAY_OUT_PORT PORTD
+#define DISPLAY_OUT_PIN 4
+
 #define MAX_STATE 7
 #define MAX_SEMAPHORE 5
 
@@ -22,26 +40,26 @@
 
 //Define pino e porta que ativa o semáforo 1.
 #define SEMAPHORE_ONE_PORT PORTC
-#define SEMAPHORE_ONE_PIN 5
+#define SEMAPHORE_ONE_PIN 4
 
 //Define pino e porta que ativa o semáforo 2.
 #define SEMAPHORE_TWO_PORT PORTC
-#define SEMAPHORE_TWO_PIN 4
+#define SEMAPHORE_TWO_PIN 3
 
 //Define pino e porta que ativa o semáforo 3.
 #define SEMAPHORE_THREE_PORT PORTC
-#define SEMAPHORE_THREE_PIN 3
+#define SEMAPHORE_THREE_PIN 2
 
 //Define pino e porta que ativa o semáforo 4.
 #define SEMAPHORE_FOUR_PORT PORTC
-#define SEMAPHORE_FOUR_PIN 2
+#define SEMAPHORE_FOUR_PIN 1
 
 //Define pino e porta que ativa o semáforo de pedestres.
 #define SEMAPHORE_PEDESTRIAN_PORT PORTC
-#define SEMAPHORE_PEDESTRIAN_PIN 1
+#define SEMAPHORE_PEDESTRIAN_PIN 0
 
 .def temp = r16
-.def tpointer = r17 ;current LED value
+.def temp2 = r17
 .def current_state = r18
 .def remaining_state_time = r19
 .def current_showing = r20
@@ -58,6 +76,10 @@ OCI2A_Interrupt:
 	push r16
 	in r16, SREG
 	push r16
+
+	ldi temp, 0
+	out PORTC, temp
+	out PORTD, temp
 	
 	// Verifica se o semáforo a ser exibido é o primeiro.
 	cpi current_showing, 0
@@ -71,8 +93,9 @@ OCI2A_Interrupt:
 
 	lpm current_leds, Z
 
-	out PORTC, temp
-	out PORTD, temp
+	in temp, SEMAPHORE_ONE_PORT
+	ori temp, 1 << SEMAPHORE_ONE_PIN
+	out SEMAPHORE_ONE_PORT, temp
 	
 	rjmp skip_semaphore_verify
 	// Verifica se o semáforo a ser exibido é o segundo.
@@ -87,6 +110,10 @@ OCI2A_Interrupt:
 	adc ZH, temp
 
 	lpm current_leds, Z
+
+	in temp, SEMAPHORE_TWO_PORT
+	ori temp, 1 << SEMAPHORE_TWO_PIN
+	out SEMAPHORE_TWO_PORT, temp
 
 	rjmp skip_semaphore_verify
 	// Verifica se o semáforo a ser exibido é o terceiro.
@@ -116,6 +143,10 @@ OCI2A_Interrupt:
 
 	lpm current_leds, Z
 
+	in temp, SEMAPHORE_THREE_PORT
+	ori temp, 1 << SEMAPHORE_THREE_PIN
+	out SEMAPHORE_THREE_PORT, temp
+
 	rjmp skip_semaphore_verify
 	// Verifica se o semáforo a ser exibido é o de pedestres.
 	verify_pedestrian_semaphore:
@@ -127,48 +158,161 @@ OCI2A_Interrupt:
 
 	lpm current_leds, Z
 
+	in temp, SEMAPHORE_PEDESTRIAN_PORT
+	ori temp, 1 << SEMAPHORE_PEDESTRIAN_PIN
+	out SEMAPHORE_PEDESTRIAN_PORT, temp
+
 	skip_semaphore_verify:
 
+		inc current_showing
+		cpi current_showing, MAX_SEMAPHORE
+		brne skip_current_showing_zero
 
-	inc current_showing
-	cpi current_showing, MAX_SEMAPHORE
-	brne skip_current_showing_zero
-
-	ldi current_showing, 0
+		ldi current_showing, 0
 
 	skip_current_showing_zero:
 
+		// Atualiza estado do led vermelho.
+		mov temp, current_leds
+		andi temp, 1 << RED_LED_BIT
+		tst temp
+		brne red_led_on
 
+		in temp, RED_LED_PORT
+		andi temp, (0xff & (0 << RED_LED_PIN))
+		out RED_LED_PORT, temp
 
-	pop r16
-	out SREG, r16
-	pop r16
-	reti
+		rjmp red_led_end
+	red_led_on:
+
+		in temp, RED_LED_PORT
+		ori temp, 1 << RED_LED_PIN
+		out RED_LED_PORT, temp
+
+	red_led_end:
+
+		// Atualiza estado do led amarelo.
+		mov temp, current_leds
+		andi temp, 1 << YELLOW_LED_BIT
+		tst temp
+		brne yellow_led_on
+
+		in temp, YELLOW_LED_PORT
+		andi temp, (0xff & (0 << YELLOW_LED_PIN))
+		out YELLOW_LED_PORT, temp
+
+		rjmp yellow_led_end
+	yellow_led_on:
+
+		in temp, YELLOW_LED_PORT
+		ori temp, 1 << YELLOW_LED_PIN
+		out YELLOW_LED_PORT, temp
+
+	yellow_led_end:
+
+		// Atualiza estado do led verde.
+		mov temp, current_leds
+		andi temp, 1 << GREEN_LED_BIT
+		tst temp
+		brne green_led_on
+
+		in temp, GREEN_LED_PORT
+		andi temp, (0xff & (0 << GREEN_LED_PIN))
+		out GREEN_LED_PORT, temp
+
+		rjmp green_led_end
+	green_led_on:
+
+		in temp, GREEN_LED_PORT
+		ori temp, 1 << GREEN_LED_PIN
+		out GREEN_LED_PORT, temp
+
+	green_led_end:
+
+		// Chavea os diplays de 7 segmentos.
+		in temp, DISPLAY_ONE_PORT
+		andi temp, 1 << DISPLAY_ONE_PIN
+		tst temp
+		brne display_two_on
+
+		in temp, DISPLAY_ONE_PORT
+		ori temp, 1 << DISPLAY_ONE_PIN
+		out DISPLAY_ONE_PORT, temp
+
+		mov temp, remaining_state_time
+
+		// Subtrai até ser menor que 10 (primeiro digito).
+		mod_10:
+		cpi temp, 10
+		brlo exit_mod
+		subi temp, 10
+		rjmp mod_10
+	exit_mod:
+
+		rjmp end_display
+	display_two_on:
+
+		mov temp2, remaining_state_time
+
+		ldi temp, 0
+		div_10:
+		cpi temp2, 10
+		brlo exit_div
+		subi temp2, 10
+		inc temp
+		rjmp div_10
+	exit_div:
+
+	end_display:
+
+		ldi temp2, DISPLAY_OUT_PIN
+
+	shift_bit:
+
+		cpi temp2, 0
+		breq exit_shift_bit
+		dec temp2
+		lsl temp
+		rjmp shift_bit
+	exit_shift_bit:
+
+		in temp2, DISPLAY_OUT_PORT
+		or temp2, temp
+		out DISPLAY_OUT_PORT, temp2
+
+		in temp, DISPLAY_TWO_PORT
+		ori temp, 1 << DISPLAY_TWO_PIN
+		out DISPLAY_TWO_PORT, temp
+
+		pop r16
+		out SREG, r16
+		pop r16
+		reti
 
 OCI1A_Interrupt:
-	push r16
-	in r16, SREG
-	push r16
+		push r16
+		in r16, SREG
+		push r16
 
-	dec remaining_state_time
+		dec remaining_state_time
 
-	tst remaining_state_time
-	brne return_int1 
+		tst remaining_state_time
+		brne return_int1 
 	
-	inc current_state
-	cpi current_state, MAX_STATE
-	brne update_state_time
+		inc current_state
+		cpi current_state, MAX_STATE
+		brne update_state_time
 
-	ldi current_state, 0
+		ldi current_state, 0
 
 	update_state_time:
-	ldi temp, 0
-	ldi ZH, high(STATE_TIME*2)
-	ldi	ZL, low(STATE_TIME*2)
-	add ZL, current_state
-	adc ZH, temp
+		ldi temp, 0
+		ldi ZH, high(STATE_TIME*2)
+		ldi	ZL, low(STATE_TIME*2)
+		add ZL, current_state
+		adc ZH, temp
 
-	lpm remaining_state_time, Z
+		lpm remaining_state_time, Z
 
 	return_int1:
 		pop r16

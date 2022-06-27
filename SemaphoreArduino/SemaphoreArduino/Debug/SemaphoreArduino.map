@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm Mon Jun 27 00:48:19 2022
+AVRASM ver. 2.2.8  C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm Mon Jun 27 20:45:54 2022
 
 
 EQU  SIGNATURE_000 0000001e
@@ -696,31 +696,45 @@ EQU  TWIaddr      00000030
 EQU  SPMRaddr     00000032
 EQU  INT_VECTORS_SIZE 00000034
 DEF  temp         r16
-DEF  tpointer     r17
+DEF  temp2        r17
 DEF  current_state r18
 DEF  remaining_state_time r19
 DEF  current_showing r20
 DEF  current_leds r21
-CSEG reset        0000007b
+CSEG reset        000000c9
 CSEG OCI2A_Interrupt 00000018
-CSEG OCI1A_Interrupt 0000004f
-CSEG verify_second_semaphore 00000026
-CSEG SEMAPHORE_ONE_STATE 00000067
-CSEG skip_semaphore_verify 00000047
-CSEG verify_third_semaphore 0000002f
-CSEG SEMAPHORE_TWO_STATE 0000006b
-CSEG verify_fourth_semaphore 00000038
-CSEG SEMAPHORE_THREE_STATE 0000006f
-CSEG verify_pedestrian_semaphore 00000041
-CSEG SEMAPHORE_PEDESTRIAN_STATE 00000077
-CSEG skip_current_showing_zero 0000004b
-CSEG return_int1  0000005f
-CSEG update_state_time 00000059
-CSEG STATE_TIME   00000063
-CSEG SEMAPHORE_FOUR_STATE 00000073
+CSEG OCI1A_Interrupt 0000009d
+CSEG verify_second_semaphore 0000002a
+CSEG SEMAPHORE_ONE_STATE 000000b5
+CSEG skip_semaphore_verify 00000054
+CSEG verify_third_semaphore 00000036
+CSEG SEMAPHORE_TWO_STATE 000000b9
+CSEG verify_fourth_semaphore 0000003f
+CSEG SEMAPHORE_THREE_STATE 000000bd
+CSEG verify_pedestrian_semaphore 0000004b
+CSEG SEMAPHORE_PEDESTRIAN_STATE 000000c5
+CSEG skip_current_showing_zero 00000058
+CSEG red_led_on   00000060
+CSEG red_led_end  00000063
+CSEG yellow_led_on 0000006b
+CSEG yellow_led_end 0000006e
+CSEG green_led_on 00000076
+CSEG green_led_end 00000079
+CSEG display_two_on 00000086
+CSEG mod_10       00000081
+CSEG exit_mod     00000085
+CSEG end_display  0000008d
+CSEG div_10       00000088
+CSEG exit_div     0000008d
+CSEG shift_bit    0000008e
+CSEG exit_shift_bit 00000093
+CSEG return_int1  000000ad
+CSEG update_state_time 000000a7
+CSEG STATE_TIME   000000b1
+CSEG SEMAPHORE_FOUR_STATE 000000c1
 EQU  WGM          00000004
 EQU  PRESCALE     00000004
 EQU  PRESCALE_DIV 00000100
 EQU  TOP          0000003f
 EQU  TOP_TWO      000000fa
-CSEG main_lp      000000ab
+CSEG main_lp      000000f9

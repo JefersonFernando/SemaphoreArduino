@@ -22,23 +22,37 @@
   <FILE>SemaphoreArduino.lss</FILE>
  </OUTPUT_FILES>
  <LABELS>
-  <reset><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>197</LINE></reset>
-  <OCI2A_Interrupt><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>57</LINE></OCI2A_Interrupt>
-  <OCI1A_Interrupt><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>148</LINE></OCI1A_Interrupt>
-  <verify_second_semaphore><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>79</LINE></verify_second_semaphore>
-  <SEMAPHORE_ONE_STATE><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>182</LINE></SEMAPHORE_ONE_STATE>
-  <skip_semaphore_verify><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>130</LINE></skip_semaphore_verify>
-  <verify_third_semaphore><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>93</LINE></verify_third_semaphore>
-  <SEMAPHORE_TWO_STATE><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>185</LINE></SEMAPHORE_TWO_STATE>
-  <verify_fourth_semaphore><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>107</LINE></verify_fourth_semaphore>
-  <SEMAPHORE_THREE_STATE><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>188</LINE></SEMAPHORE_THREE_STATE>
-  <verify_pedestrian_semaphore><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>121</LINE></verify_pedestrian_semaphore>
-  <SEMAPHORE_PEDESTRIAN_STATE><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>194</LINE></SEMAPHORE_PEDESTRIAN_STATE>
-  <skip_current_showing_zero><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>139</LINE></skip_current_showing_zero>
-  <return_int1><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>173</LINE></return_int1>
-  <update_state_time><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>164</LINE></update_state_time>
-  <STATE_TIME><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>179</LINE></STATE_TIME>
-  <SEMAPHORE_FOUR_STATE><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>191</LINE></SEMAPHORE_FOUR_STATE>
-  <main_lp><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>274</LINE></main_lp>
+  <reset><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>339</LINE></reset>
+  <OCI2A_Interrupt><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>75</LINE></OCI2A_Interrupt>
+  <OCI1A_Interrupt><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>290</LINE></OCI1A_Interrupt>
+  <verify_second_semaphore><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>102</LINE></verify_second_semaphore>
+  <SEMAPHORE_ONE_STATE><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>324</LINE></SEMAPHORE_ONE_STATE>
+  <skip_semaphore_verify><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>165</LINE></skip_semaphore_verify>
+  <verify_third_semaphore><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>120</LINE></verify_third_semaphore>
+  <SEMAPHORE_TWO_STATE><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>327</LINE></SEMAPHORE_TWO_STATE>
+  <verify_fourth_semaphore><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>134</LINE></verify_fourth_semaphore>
+  <SEMAPHORE_THREE_STATE><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>330</LINE></SEMAPHORE_THREE_STATE>
+  <verify_pedestrian_semaphore><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>152</LINE></verify_pedestrian_semaphore>
+  <SEMAPHORE_PEDESTRIAN_STATE><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>336</LINE></SEMAPHORE_PEDESTRIAN_STATE>
+  <skip_current_showing_zero><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>173</LINE></skip_current_showing_zero>
+  <red_led_on><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>186</LINE></red_led_on>
+  <red_led_end><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>192</LINE></red_led_end>
+  <yellow_led_on><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>205</LINE></yellow_led_on>
+  <yellow_led_end><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>211</LINE></yellow_led_end>
+  <green_led_on><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>224</LINE></green_led_on>
+  <green_led_end><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>230</LINE></green_led_end>
+  <display_two_on><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>253</LINE></display_two_on>
+  <mod_10><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>245</LINE></mod_10>
+  <exit_mod><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>250</LINE></exit_mod>
+  <end_display><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>266</LINE></end_display>
+  <div_10><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>258</LINE></div_10>
+  <exit_div><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>264</LINE></exit_div>
+  <shift_bit><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>269</LINE></shift_bit>
+  <exit_shift_bit><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>275</LINE></exit_shift_bit>
+  <return_int1><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>315</LINE></return_int1>
+  <update_state_time><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>306</LINE></update_state_time>
+  <STATE_TIME><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>321</LINE></STATE_TIME>
+  <SEMAPHORE_FOUR_STATE><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>333</LINE></SEMAPHORE_FOUR_STATE>
+  <main_lp><FILE>C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm</FILE><LINE>416</LINE></main_lp>
  </LABELS>
 </ASSEMBLER_INFO>
