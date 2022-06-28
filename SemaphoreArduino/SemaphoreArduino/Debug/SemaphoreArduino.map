@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm Tue Jun 28 13:47:31 2022
+AVRASM ver. 2.2.8  C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm Tue Jun 28 14:51:03 2022
 
 
 EQU  SIGNATURE_000 0000001e
@@ -737,4 +737,4 @@ EQU  PRESCALE     00000004
 EQU  PRESCALE_DIV 00000100
 EQU  TOP          0000f424
 EQU  TOP_TWO      0000007d
-CSEG main_lp      000000ff
+CSEG main_lp      00000101

@@ -356,12 +356,16 @@ reset:
 	out SPH, temp
 
 	//Configura pinos 0 a 5 do barramento C como sa�da
-	ldi temp, 0b11111
+	ldi temp, 0b111111
 	out DDRC, temp
 
 	//Configura todos os pinos do barramento D como sa�da
 	ldi temp, 0xFF
 	out DDRD, temp
+
+	//Configura todos os pinos do barramento D como sa�da
+	ldi temp, 0xFF
+	out DDRB, temp
 
 	ldi temp, 0
 	ldi current_state, 0

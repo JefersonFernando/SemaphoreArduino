@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm Tue Jun 28 13:47:31 2022
+AVRASM ver. 2.2.8  C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm Tue Jun 28 14:51:03 2022
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.6.364\avrasm\inc\m328Pdef.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.6.364\avrasm\inc\m328Pdef.inc'
@@ -1366,23 +1366,27 @@ C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreAr
 0000d2 bf0e                      	out SPH, temp
                                  
                                  	//Configura pinos 0 a 5 do barramento C como sa�da
-0000d3 e10f                      	ldi temp, 0b11111
+0000d3 e30f                      	ldi temp, 0b111111
 0000d4 b907                      	out DDRC, temp
                                  
                                  	//Configura todos os pinos do barramento D como sa�da
 0000d5 ef0f                      	ldi temp, 0xFF
 0000d6 b90a                      	out DDRD, temp
                                  
-0000d7 e000                      	ldi temp, 0
-0000d8 e020                      	ldi current_state, 0
-0000d9 e0f1                      	ldi ZH, high(STATE_TIME*2)
-0000da e6ee                      	ldi	ZL, low(STATE_TIME*2)
-0000db 0fe2                      	add ZL, current_state
-0000dc 1ff0                      	adc ZH, temp
+                                 	//Configura todos os pinos do barramento D como sa�da
+0000d7 ef0f                      	ldi temp, 0xFF
+0000d8 b904                      	out DDRB, temp
                                  
-0000dd 9134                      	lpm remaining_state_time, Z
+0000d9 e000                      	ldi temp, 0
+0000da e020                      	ldi current_state, 0
+0000db e0f1                      	ldi ZH, high(STATE_TIME*2)
+0000dc e6ee                      	ldi	ZL, low(STATE_TIME*2)
+0000dd 0fe2                      	add ZL, current_state
+0000de 1ff0                      	adc ZH, temp
                                  
-0000de e040                      	ldi current_showing, 0
+0000df 9134                      	lpm remaining_state_time, Z
+                                 
+0000e0 e040                      	ldi current_showing, 0
                                  
                                  
                                  	.equ WGM = 0b0100 ;Waveform generation mode: CTC
@@ -1399,40 +1403,40 @@ C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreAr
                                  	.endif
                                  
                                  	///// TOP UM /////
-0000df ef04                      	ldi temp, high(TOP) ;initialize compare value (TOP)
-0000e0 9300 0089                 	sts OCR1AH, temp
-0000e2 e204                      	ldi temp, low(TOP)
-0000e3 9300 0088                 	sts OCR1AL, temp
+0000e1 ef04                      	ldi temp, high(TOP) ;initialize compare value (TOP)
+0000e2 9300 0089                 	sts OCR1AH, temp
+0000e4 e204                      	ldi temp, low(TOP)
+0000e5 9300 0088                 	sts OCR1AL, temp
                                  
-0000e5 e000                      	ldi temp, ((WGM&0b11) << WGM10) ;lower 2 bits of WGM
+0000e7 e000                      	ldi temp, ((WGM&0b11) << WGM10) ;lower 2 bits of WGM
                                  	; WGM&0b11 = 0b0100 & 0b0011 = 0b0000 
-0000e6 9300 0080                 	sts TCCR1A, temp
+0000e8 9300 0080                 	sts TCCR1A, temp
                                  	;upper 2 bits of WGM and clock select
-0000e8 e00c                      	ldi temp, ((WGM>> 2) << WGM12)|(PRESCALE << CS10)
-0000e9 9300 0081                 	sts TCCR1B, temp
+0000ea e00c                      	ldi temp, ((WGM>> 2) << WGM12)|(PRESCALE << CS10)
+0000eb 9300 0081                 	sts TCCR1B, temp
                                  
-0000eb 9100 006f                 	lds r16, TIMSK1
-0000ed 6002                      	sbr r16, 1 <<OCIE1A
-0000ee 9300 006f                 	sts TIMSK1, r16
+0000ed 9100 006f                 	lds r16, TIMSK1
+0000ef 6002                      	sbr r16, 1 <<OCIE1A
+0000f0 9300 006f                 	sts TIMSK1, r16
                                  
                                  	///// TOP DOIS /////
-0000f0 e70d                      	ldi temp, TOP_TWO ;initialize compare value (TOP)
-0000f1 9300 00b3                 	sts OCR2A, temp
+0000f2 e70d                      	ldi temp, TOP_TWO ;initialize compare value (TOP)
+0000f3 9300 00b3                 	sts OCR2A, temp
                                  
                                  	;ldi temp, ((WGM&0b11) << WGM10) ;lower 2 bits of WGM
-0000f3 e002                      	ldi temp, 0b00000010
+0000f5 e002                      	ldi temp, 0b00000010
                                  	; WGM&0b11 = 0b0100 & 0b0011 = 0b0000 
-0000f4 9300 00b0                 	sts TCCR2A, temp
+0000f6 9300 00b0                 	sts TCCR2A, temp
                                  
-0000f6 e006                      	ldi temp, 0b00000110
+0000f8 e006                      	ldi temp, 0b00000110
                                  	; WGM&0b11 = 0b0100 & 0b0011 = 0b0000 
-0000f7 9300 00b1                 	sts TCCR2B, temp
+0000f9 9300 00b1                 	sts TCCR2B, temp
                                  
-0000f9 9100 0070                 	lds r16, TIMSK2
-0000fb 6002                      	sbr r16, 1 <<OCIE2A
-0000fc 9300 0070                 	sts TIMSK2, r16
+0000fb 9100 0070                 	lds r16, TIMSK2
+0000fd 6002                      	sbr r16, 1 <<OCIE2A
+0000fe 9300 0070                 	sts TIMSK2, r16
                                  
-0000fe 9478                      	sei
+000100 9478                      	sei
                                  	main_lp:
 
 
@@ -1453,7 +1457,7 @@ counted separately from r26..r31 here.
 "ATmega328P" register use summary:
 x  :   0 y  :   0 z  :   7 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
-r13:   0 r14:   0 r15:   0 r16: 118 r17:   9 r18:  11 r19:   6 r20:   9 
+r13:   0 r14:   0 r15:   0 r16: 120 r17:   9 r18:  11 r19:   6 r20:   9 
 r21:   8 r22:   0 r23:   0 r24:   0 r25:   0 r26:   0 r27:   0 r28:   0 
 r29:   0 r30:  14 r31:  14 
 Registers used: 9 out of 35 (25.7%)
@@ -1469,9 +1473,9 @@ clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   0 cls   :   0
 clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   0 cpc   :   0 
 cpi   :   9 cpse  :   0 dec   :   2 eor   :   0 fmul  :   0 fmuls :   0 
 fmulsu:   0 icall :   0 ijmp  :   0 in    :  17 inc   :   3 jmp   :   3 
-ld    :   0 ldd   :   0 ldi   :  39 lds   :   2 lpm   :  14 lsl   :   1 
+ld    :   0 ldd   :   0 ldi   :  40 lds   :   2 lpm   :  14 lsl   :   1 
 lsr   :   0 mov   :   6 movw  :   0 mul   :   0 muls  :   0 mulsu :   0 
-neg   :   0 nop   :   0 or    :   1 ori   :  11 out   :  23 pop   :   4 
+neg   :   0 nop   :   0 or    :   1 ori   :  11 out   :  24 pop   :   4 
 push  :   4 rcall :   0 ret   :   0 reti  :   2 rjmp  :  12 rol   :   0 
 ror   :   0 sbc   :   0 sbci  :   0 sbi   :   0 sbic  :   0 sbis  :   0 
 sbiw  :   0 sbr   :   2 sbrc  :   0 sbrs  :   0 sec   :   0 seh   :   0 
@@ -1483,7 +1487,7 @@ Instructions used: 28 out of 113 (24.8%)
 "ATmega328P" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x000200    428     48    476   32768   1.5%
+[.cseg] 0x000000 0x000204    432     48    480   32768   1.5%
 [.dseg] 0x000100 0x000100      0      0      0    2048   0.0%
 [.eseg] 0x000000 0x000000      0      0      0    1024   0.0%
 
