@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm Mon Jun 27 23:30:29 2022
+AVRASM ver. 2.2.8  C:\Users\jefer\projects\IC\aulas\microcontroladores\SemaphoreArduino\SemaphoreArduino\SemaphoreArduino\main.asm Tue Jun 28 13:47:31 2022
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.6.364\avrasm\inc\m328Pdef.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.6.364\avrasm\inc\m328Pdef.inc'
@@ -999,11 +999,11 @@ AVRASM ver. 2.2.8  C:\Users\jefer\projects\IC\aulas\microcontroladores\Semaphore
                                  #define YELLOW_LED_BIT 1
                                  #define GREEN_LED_BIT 0
                                  
-                                 #define RED_LED_PORT PORTD
-                                 #define RED_LED_PIN 1
+                                 #define RED_LED_PORT PORTB
+                                 #define RED_LED_PIN 3
                                  
-                                 #define YELLOW_LED_PORT PORTD
-                                 #define YELLOW_LED_PIN 0
+                                 #define YELLOW_LED_PORT PORTB
+                                 #define YELLOW_LED_PIN 2
                                  
                                  #define GREEN_LED_PORT PORTC
                                  #define GREEN_LED_PIN 5
@@ -1174,16 +1174,16 @@ AVRASM ver. 2.2.8  C:\Users\jefer\projects\IC\aulas\microcontroladores\Semaphore
 000060 2300                      		tst temp // verifica se o valor do bit do led vermelho � igual a 0
 000061 f421                      		brne red_led_on // se n�o for igual a 0, ele � 1 e precisa ser ligado
                                  
-000062 b10b                      		in temp, RED_LED_PORT
-000063 7f0d                      		andi temp, ~(1 << RED_LED_PIN) 
-000064 b90b                      		out RED_LED_PORT, temp
+000062 b105                      		in temp, RED_LED_PORT
+000063 7f07                      		andi temp, ~(1 << RED_LED_PIN) 
+000064 b905                      		out RED_LED_PORT, temp
                                  
 000065 c003                      		rjmp red_led_end // vai para a outra cor do sem�foro
                                  	
                                  	red_led_on:
-000066 b10b                      		in temp, RED_LED_PORT // L� os bits da porta usada
-000067 6002                      		ori temp, 1 << RED_LED_PIN // Seta 1 no bit espec�fico referente ao pino do led
-000068 b90b                      		out RED_LED_PORT, temp // Salva os bits
+000066 b105                      		in temp, RED_LED_PORT // L� os bits da porta usada
+000067 6008                      		ori temp, 1 << RED_LED_PIN // Seta 1 no bit espec�fico referente ao pino do led
+000068 b905                      		out RED_LED_PORT, temp // Salva os bits
                                  
                                  	red_led_end:
                                  		// In�cio do cor amarela
@@ -1193,16 +1193,16 @@ AVRASM ver. 2.2.8  C:\Users\jefer\projects\IC\aulas\microcontroladores\Semaphore
 00006b 2300                      		tst temp // verifica se o valor do bit do led amarelo � igual a 0
 00006c f421                      		brne yellow_led_on // se n�o for igual a 0, ele � 1 e precisa ser ligado
                                  
-00006d b10b                      		in temp, YELLOW_LED_PORT
-00006e 7f0e                      		andi temp, ~(1 << YELLOW_LED_PIN)
-00006f b90b                      		out YELLOW_LED_PORT, temp
+00006d b105                      		in temp, YELLOW_LED_PORT
+00006e 7f0b                      		andi temp, ~(1 << YELLOW_LED_PIN)
+00006f b905                      		out YELLOW_LED_PORT, temp
                                  
 000070 c003                      		rjmp yellow_led_end
                                  
                                  	yellow_led_on:
-000071 b10b                      		in temp, YELLOW_LED_PORT
-000072 6001                      		ori temp, 1 << YELLOW_LED_PIN
-000073 b90b                      		out YELLOW_LED_PORT, temp
+000071 b105                      		in temp, YELLOW_LED_PORT
+000072 6004                      		ori temp, 1 << YELLOW_LED_PIN
+000073 b905                      		out YELLOW_LED_PORT, temp
                                  
                                  	yellow_led_end:
                                  		// In�cio do cor amarela

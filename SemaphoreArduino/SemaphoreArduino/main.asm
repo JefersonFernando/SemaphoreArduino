@@ -13,11 +13,11 @@
 #define YELLOW_LED_BIT 1
 #define GREEN_LED_BIT 0
 
-#define RED_LED_PORT PORTD
-#define RED_LED_PIN 1
+#define RED_LED_PORT PORTB
+#define RED_LED_PIN 3
 
-#define YELLOW_LED_PORT PORTD
-#define YELLOW_LED_PIN 0
+#define YELLOW_LED_PORT PORTB
+#define YELLOW_LED_PIN 2
 
 #define GREEN_LED_PORT PORTC
 #define GREEN_LED_PIN 5
