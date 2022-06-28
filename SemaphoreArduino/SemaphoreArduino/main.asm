@@ -1,9 +1,9 @@
-; Projeto de semáforo com Arduino utilizando chaveamento de LEDs.
+; Projeto de semï¿½foro com Arduino utilizando chaveamento de LEDs.
 ;
 ; Created: 26/06/2022
 ; Author : Itallo Patrick
 ; Author : Jeferson Fernando
-; Author : João Victor Holanda
+; Author : Joï¿½o Victor Holanda
 ; Author : Lucas Buarque 
 ;
 ;Clock speed 16 MHz
@@ -14,19 +14,19 @@
 #define GREEN_LED_BIT 0
 
 #define RED_LED_PORT PORTD
-#define RED_LED_PIN 0
+#define RED_LED_PIN 1
 
 #define YELLOW_LED_PORT PORTD
-#define YELLOW_LED_PIN 1
+#define YELLOW_LED_PIN 0
 
-#define GREEN_LED_PORT PORTD
-#define GREEN_LED_PIN 2
+#define GREEN_LED_PORT PORTC
+#define GREEN_LED_PIN 5
 
 #define DISPLAY_ONE_PORT PORTD
 #define DISPLAY_ONE_PIN 3
 
-#define DISPLAY_TWO_PORT PORTC
-#define DISPLAY_TWO_PIN 4
+#define DISPLAY_TWO_PORT PORTD
+#define DISPLAY_TWO_PIN 2
 
 #define DISPLAY_OUT_PORT PORTD
 #define DISPLAY_OUT_PIN 4
@@ -35,28 +35,28 @@
 #define MAX_SEMAPHORE 5
 
 #define CLOCK 16.0e6 ;clock speed
-#define TIMER_1_DELAY 1.0e-3 ;seconds
-#define TIMER_2_DELAY  4.0e-3
+#define TIMER_1_DELAY 1.0 ;seconds
+#define TIMER_2_DELAY  2.0e-3
 
-//Define pino e porta que ativa o semáforo 1.
+//Define pino e porta que ativa o semï¿½foro 1.
 #define SEMAPHORE_ONE_PORT PORTC
-#define SEMAPHORE_ONE_PIN 4
+#define SEMAPHORE_ONE_PIN 0
 
-//Define pino e porta que ativa o semáforo 2.
+//Define pino e porta que ativa o semï¿½foro 2.
 #define SEMAPHORE_TWO_PORT PORTC
-#define SEMAPHORE_TWO_PIN 3
+#define SEMAPHORE_TWO_PIN 4
 
-//Define pino e porta que ativa o semáforo 3.
+//Define pino e porta que ativa o semï¿½foro 3.
 #define SEMAPHORE_THREE_PORT PORTC
 #define SEMAPHORE_THREE_PIN 2
 
-//Define pino e porta que ativa o semáforo 4.
+//Define pino e porta que ativa o semï¿½foro 4.
 #define SEMAPHORE_FOUR_PORT PORTC
-#define SEMAPHORE_FOUR_PIN 1
+#define SEMAPHORE_FOUR_PIN 3
 
-//Define pino e porta que ativa o semáforo de pedestres.
+//Define pino e porta que ativa o semï¿½foro de pedestres.
 #define SEMAPHORE_PEDESTRIAN_PORT PORTC
-#define SEMAPHORE_PEDESTRIAN_PIN 0
+#define SEMAPHORE_PEDESTRIAN_PIN 1
 
 .def temp = r16
 .def temp2 = r17
@@ -77,28 +77,29 @@ OCI2A_Interrupt:
 	in r16, SREG
 	push r16
 
+	// Apaga tudo
 	ldi temp, 0
 	out PORTC, temp
 	out PORTD, temp
 	
-	// Verifica se o semáforo a ser exibido é o primeiro.
+	// Verifica se o semï¿½foro a ser exibido ï¿½ o primeiro.
 	cpi current_showing, 0
 	brne verify_second_semaphore
 
 	ldi temp, 0
 	ldi ZH, high(SEMAPHORE_ONE_STATE*2)
 	ldi	ZL, low(SEMAPHORE_ONE_STATE*2)
-	add ZL, current_state
-	adc ZH, temp
+	add ZL, current_state // Adiciona o offset current_state ao ZL
+	adc ZH, temp // Se a operaï¿½ï¿½o em ZL der overflow, adiciona o carry em ZH
 
-	lpm current_leds, Z
+	lpm current_leds, Z // Carrega os bits dos leds do semï¿½foro
 
 	in temp, SEMAPHORE_ONE_PORT
 	ori temp, 1 << SEMAPHORE_ONE_PIN
 	out SEMAPHORE_ONE_PORT, temp
 	
 	rjmp skip_semaphore_verify
-	// Verifica se o semáforo a ser exibido é o segundo.
+	// Verifica se o semï¿½foro a ser exibido ï¿½ o segundo.
 	verify_second_semaphore:
 		cpi current_showing, 1
 		brne verify_third_semaphore
@@ -116,24 +117,10 @@ OCI2A_Interrupt:
 		out SEMAPHORE_TWO_PORT, temp
 
 		rjmp skip_semaphore_verify
-	// Verifica se o semáforo a ser exibido é o terceiro.
+	// Verifica se o semï¿½foro a ser exibido ï¿½ o terceiro.
 	verify_third_semaphore:
 		cpi current_showing, 2
 		brne verify_fourth_semaphore
-
-		ldi temp, 0
-		ldi ZH, high(SEMAPHORE_THREE_STATE*2)
-		ldi	ZL, low(SEMAPHORE_THREE_STATE*2)
-		add ZL, current_state
-		adc ZH, temp
-
-		lpm current_leds, Z
-
-		rjmp skip_semaphore_verify
-	// Verifica se o semáforo a ser exibido é o quarto.
-	verify_fourth_semaphore:
-		cpi current_showing, 3
-		brne verify_pedestrian_semaphore
 
 		ldi temp, 0
 		ldi ZH, high(SEMAPHORE_THREE_STATE*2)
@@ -148,7 +135,30 @@ OCI2A_Interrupt:
 		out SEMAPHORE_THREE_PORT, temp
 
 		rjmp skip_semaphore_verify
-		// Verifica se o semáforo a ser exibido é o de pedestres.
+	
+	// Verifica se o semï¿½foro a ser exibido ï¿½ o quarto.
+	verify_fourth_semaphore:
+		cpi current_showing, 3
+		brne verify_pedestrian_semaphore
+
+		ldi temp, 0
+		ldi ZH, high(SEMAPHORE_FOUR_STATE*2)
+		ldi	ZL, low(SEMAPHORE_FOUR_STATE*2)
+		add ZL, current_state
+		adc ZH, temp
+
+		lpm current_leds, Z
+
+		in temp, SEMAPHORE_FOUR_PORT
+		ori temp, 1 << SEMAPHORE_FOUR_PIN
+		out SEMAPHORE_FOUR_PORT, temp
+
+		in temp, SEMAPHORE_FOUR_PORT
+		ori temp, 1 << SEMAPHORE_FOUR_PIN
+		out SEMAPHORE_FOUR_PORT, temp
+
+		rjmp skip_semaphore_verify
+		// Verifica se o semï¿½foro a ser exibido ï¿½ o de pedestres.
 	verify_pedestrian_semaphore:
 		ldi temp, 0
 		ldi ZH, high(SEMAPHORE_PEDESTRIAN_STATE*2)
@@ -164,52 +174,52 @@ OCI2A_Interrupt:
 
 	skip_semaphore_verify:
 
-		inc current_showing
-		cpi current_showing, MAX_SEMAPHORE
-		brne skip_current_showing_zero
+		inc current_showing // Atualiza o semï¿½foro atual
+		cpi current_showing, MAX_SEMAPHORE // Verifica se passou do ï¿½ltimo semï¿½foro
+		brne skip_current_showing_zero // Se nï¿½o passar do ï¿½ltimo, vai para a label skip_current_showing_zero
 
-		ldi current_showing, 0
+		ldi current_showing, 0 // Se passou do ï¿½ltimo, volta para o primeiro
 
 	skip_current_showing_zero:
-
+		// Inï¿½cio da cor vermelha
 		// Atualiza estado do led vermelho.
 		mov temp, current_leds
-		andi temp, 1 << RED_LED_BIT
-		tst temp
-		brne red_led_on
+		andi temp, 1 << RED_LED_BIT // Filtra o valor do bit do led vermelho
+		tst temp // verifica se o valor do bit do led vermelho ï¿½ igual a 0
+		brne red_led_on // se nï¿½o for igual a 0, ele ï¿½ 1 e precisa ser ligado
 
 		in temp, RED_LED_PORT
-		andi temp, (0xff & (0 << RED_LED_PIN))
+		andi temp, ~(1 << RED_LED_PIN) 
 		out RED_LED_PORT, temp
 
-		rjmp red_led_end
+		rjmp red_led_end // vai para a outra cor do semï¿½foro
+	
 	red_led_on:
-
-		in temp, RED_LED_PORT
-		ori temp, 1 << RED_LED_PIN
-		out RED_LED_PORT, temp
+		in temp, RED_LED_PORT // Lï¿½ os bits da porta usada
+		ori temp, 1 << RED_LED_PIN // Seta 1 no bit especï¿½fico referente ao pino do led
+		out RED_LED_PORT, temp // Salva os bits
 
 	red_led_end:
-
+		// Inï¿½cio do cor amarela
 		// Atualiza estado do led amarelo.
 		mov temp, current_leds
-		andi temp, 1 << YELLOW_LED_BIT
-		tst temp
-		brne yellow_led_on
+		andi temp, 1 << YELLOW_LED_BIT // Filtra o valor do bit do led amarelo
+		tst temp // verifica se o valor do bit do led amarelo ï¿½ igual a 0
+		brne yellow_led_on // se nï¿½o for igual a 0, ele ï¿½ 1 e precisa ser ligado
 
 		in temp, YELLOW_LED_PORT
-		andi temp, (0xff & (0 << YELLOW_LED_PIN))
+		andi temp, ~(1 << YELLOW_LED_PIN)
 		out YELLOW_LED_PORT, temp
 
 		rjmp yellow_led_end
-	yellow_led_on:
 
+	yellow_led_on:
 		in temp, YELLOW_LED_PORT
 		ori temp, 1 << YELLOW_LED_PIN
 		out YELLOW_LED_PORT, temp
 
 	yellow_led_end:
-
+		// Inï¿½cio do cor amarela
 		// Atualiza estado do led verde.
 		mov temp, current_leds
 		andi temp, 1 << GREEN_LED_BIT
@@ -217,21 +227,21 @@ OCI2A_Interrupt:
 		brne green_led_on
 
 		in temp, GREEN_LED_PORT
-		andi temp, (0xff & (0 << GREEN_LED_PIN))
+		andi temp, ~(1 << GREEN_LED_PIN)
 		out GREEN_LED_PORT, temp
 
 		rjmp green_led_end
-	green_led_on:
 
+	green_led_on:
 		in temp, GREEN_LED_PORT
 		ori temp, 1 << GREEN_LED_PIN
 		out GREEN_LED_PORT, temp
 
 	green_led_end:
 
-		// Chavea os diplays de 7 segmentos.
-		in temp, DISPLAY_ONE_PORT
-		andi temp, 1 << DISPLAY_ONE_PIN
+		// Chaveia os diplays de 7 segmentos.
+		mov temp, current_showing
+		andi temp, 0b1
 		tst temp
 		brne display_two_on
 
@@ -241,7 +251,7 @@ OCI2A_Interrupt:
 
 		mov temp, remaining_state_time
 
-		// Subtrai até ser menor que 10 (primeiro digito).
+		// Subtrai atï¿½ ser menor que 10 (primeiro digito).
 		mod_10:
 		cpi temp, 10
 		brlo exit_mod
@@ -251,6 +261,10 @@ OCI2A_Interrupt:
 
 		rjmp end_display
 	display_two_on:
+
+		in temp, DISPLAY_TWO_PORT
+		ori temp, 1 << DISPLAY_TWO_PIN
+		out DISPLAY_TWO_PORT, temp
 
 		mov temp2, remaining_state_time
 
@@ -267,22 +281,18 @@ OCI2A_Interrupt:
 
 		ldi temp2, DISPLAY_OUT_PIN
 
-	shift_bit:
+		shift_bit:
 
-		cpi temp2, 0
-		breq exit_shift_bit
-		dec temp2
-		lsl temp
-		rjmp shift_bit
-	exit_shift_bit:
+			cpi temp2, 0
+			breq exit_shift_bit
+			dec temp2
+			lsl temp
+			rjmp shift_bit
+		exit_shift_bit:
 
 		in temp2, DISPLAY_OUT_PORT
 		or temp2, temp
 		out DISPLAY_OUT_PORT, temp2
-
-		in temp, DISPLAY_TWO_PORT
-		ori temp, 1 << DISPLAY_TWO_PIN
-		out DISPLAY_TWO_PORT, temp
 
 		pop r16
 		out SREG, r16
@@ -345,11 +355,11 @@ reset:
 	ldi temp, high(RAMEND)
 	out SPH, temp
 
-	//Configura pinos 0 a 5 do barramento C como saída
+	//Configura pinos 0 a 5 do barramento C como saï¿½da
 	ldi temp, 0b11111
 	out DDRC, temp
 
-	//Configura todos os pinos do barramento D como saída
+	//Configura todos os pinos do barramento D como saï¿½da
 	ldi temp, 0xFF
 	out DDRD, temp
 
