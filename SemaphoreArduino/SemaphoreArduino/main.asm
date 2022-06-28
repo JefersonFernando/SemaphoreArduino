@@ -100,67 +100,67 @@ OCI2A_Interrupt:
 	rjmp skip_semaphore_verify
 	// Verifica se o semáforo a ser exibido é o segundo.
 	verify_second_semaphore:
-	cpi current_showing, 1
-	brne verify_third_semaphore
+		cpi current_showing, 1
+		brne verify_third_semaphore
 
-	ldi temp, 0
-	ldi ZH, high(SEMAPHORE_TWO_STATE*2)
-	ldi	ZL, low(SEMAPHORE_TWO_STATE*2)
-	add ZL, current_state
-	adc ZH, temp
+		ldi temp, 0
+		ldi ZH, high(SEMAPHORE_TWO_STATE*2)
+		ldi	ZL, low(SEMAPHORE_TWO_STATE*2)
+		add ZL, current_state
+		adc ZH, temp
 
-	lpm current_leds, Z
+		lpm current_leds, Z
 
-	in temp, SEMAPHORE_TWO_PORT
-	ori temp, 1 << SEMAPHORE_TWO_PIN
-	out SEMAPHORE_TWO_PORT, temp
+		in temp, SEMAPHORE_TWO_PORT
+		ori temp, 1 << SEMAPHORE_TWO_PIN
+		out SEMAPHORE_TWO_PORT, temp
 
-	rjmp skip_semaphore_verify
+		rjmp skip_semaphore_verify
 	// Verifica se o semáforo a ser exibido é o terceiro.
 	verify_third_semaphore:
-	cpi current_showing, 2
-	brne verify_fourth_semaphore
+		cpi current_showing, 2
+		brne verify_fourth_semaphore
 
-	ldi temp, 0
-	ldi ZH, high(SEMAPHORE_THREE_STATE*2)
-	ldi	ZL, low(SEMAPHORE_THREE_STATE*2)
-	add ZL, current_state
-	adc ZH, temp
+		ldi temp, 0
+		ldi ZH, high(SEMAPHORE_THREE_STATE*2)
+		ldi	ZL, low(SEMAPHORE_THREE_STATE*2)
+		add ZL, current_state
+		adc ZH, temp
 
-	lpm current_leds, Z
+		lpm current_leds, Z
 
-	rjmp skip_semaphore_verify
+		rjmp skip_semaphore_verify
 	// Verifica se o semáforo a ser exibido é o quarto.
 	verify_fourth_semaphore:
-	cpi current_showing, 3
-	brne verify_pedestrian_semaphore
+		cpi current_showing, 3
+		brne verify_pedestrian_semaphore
 
-	ldi temp, 0
-	ldi ZH, high(SEMAPHORE_THREE_STATE*2)
-	ldi	ZL, low(SEMAPHORE_THREE_STATE*2)
-	add ZL, current_state
-	adc ZH, temp
+		ldi temp, 0
+		ldi ZH, high(SEMAPHORE_THREE_STATE*2)
+		ldi	ZL, low(SEMAPHORE_THREE_STATE*2)
+		add ZL, current_state
+		adc ZH, temp
 
-	lpm current_leds, Z
+		lpm current_leds, Z
 
-	in temp, SEMAPHORE_THREE_PORT
-	ori temp, 1 << SEMAPHORE_THREE_PIN
-	out SEMAPHORE_THREE_PORT, temp
+		in temp, SEMAPHORE_THREE_PORT
+		ori temp, 1 << SEMAPHORE_THREE_PIN
+		out SEMAPHORE_THREE_PORT, temp
 
-	rjmp skip_semaphore_verify
-	// Verifica se o semáforo a ser exibido é o de pedestres.
+		rjmp skip_semaphore_verify
+		// Verifica se o semáforo a ser exibido é o de pedestres.
 	verify_pedestrian_semaphore:
-	ldi temp, 0
-	ldi ZH, high(SEMAPHORE_PEDESTRIAN_STATE*2)
-	ldi	ZL, low(SEMAPHORE_PEDESTRIAN_STATE*2)
-	add ZL, current_state
-	adc ZH, temp
+		ldi temp, 0
+		ldi ZH, high(SEMAPHORE_PEDESTRIAN_STATE*2)
+		ldi	ZL, low(SEMAPHORE_PEDESTRIAN_STATE*2)
+		add ZL, current_state
+		adc ZH, temp
 
-	lpm current_leds, Z
+		lpm current_leds, Z
 
-	in temp, SEMAPHORE_PEDESTRIAN_PORT
-	ori temp, 1 << SEMAPHORE_PEDESTRIAN_PIN
-	out SEMAPHORE_PEDESTRIAN_PORT, temp
+		in temp, SEMAPHORE_PEDESTRIAN_PORT
+		ori temp, 1 << SEMAPHORE_PEDESTRIAN_PIN
+		out SEMAPHORE_PEDESTRIAN_PORT, temp
 
 	skip_semaphore_verify:
 
