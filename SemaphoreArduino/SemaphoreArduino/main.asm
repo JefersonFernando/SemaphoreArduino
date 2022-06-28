@@ -240,18 +240,21 @@ OCI2A_Interrupt:
 	green_led_end:
 
 		// Chaveia os diplays de 7 segmentos.
+		// lógica para verificar se o semáforo mostrado é par ou ímpar para chavear
+		// os displays
 		mov temp, current_showing
 		andi temp, 0b1
 		tst temp
 		brne display_two_on
 
-		in temp, DISPLAY_ONE_PORT
+		in temp, DISPLAY_ONE_PORT // ativa o display um
 		ori temp, 1 << DISPLAY_ONE_PIN
 		out DISPLAY_ONE_PORT, temp
 
-		mov temp, remaining_state_time
+		mov temp, remaining_state_time // pega o tempo atual
 
-		// Subtrai at� ser menor que 10 (primeiro digito).
+		// Subtrai at� ser menor que 10 (primeiro digito)./
+		// Pegando o valor do resto do tempo que representa o dígito do display um (unidade)
 		mod_10:
 		cpi temp, 10
 		brlo exit_mod
@@ -262,12 +265,13 @@ OCI2A_Interrupt:
 		rjmp end_display
 	display_two_on:
 
-		in temp, DISPLAY_TWO_PORT
+		in temp, DISPLAY_TWO_PORT // ativa o display 2
 		ori temp, 1 << DISPLAY_TWO_PIN
 		out DISPLAY_TWO_PORT, temp
 
 		mov temp2, remaining_state_time
-
+		
+		// Pega o dígito da dezena fazendo a divisão por 10 do tempo
 		ldi temp, 0
 		div_10:
 		cpi temp2, 10
@@ -279,10 +283,10 @@ OCI2A_Interrupt:
 
 	end_display:
 
-		ldi temp2, DISPLAY_OUT_PIN
-
+		ldi temp2, DISPLAY_OUT_PIN // pega os pinos referentes ao valor do display utilizado
+		
+		// Coloca os bits do valor no local correto na porta usada
 		shift_bit:
-
 			cpi temp2, 0
 			breq exit_shift_bit
 			dec temp2
@@ -290,7 +294,7 @@ OCI2A_Interrupt:
 			rjmp shift_bit
 		exit_shift_bit:
 
-		in temp2, DISPLAY_OUT_PORT
+		in temp2, DISPLAY_OUT_PORT // acende o display
 		or temp2, temp
 		out DISPLAY_OUT_PORT, temp2
 
